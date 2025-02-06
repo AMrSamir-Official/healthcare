@@ -1,35 +1,10 @@
-"use client";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-import { SelectItem } from "@/components/ui/select";
 import { Doctors } from "@/constants";
-import {
-  createAppointment,
-  updateAppointment,
-} from "@/lib/actions/appointment.actions";
+import { createAppointment, updateAppointment } from "@/lib/actions/appointment.actions";
 import { getAppointmentSchema } from "@/lib/validation";
-import { Appointment } from "@/types/appwrite.types";
-
-import "react-datepicker/dist/react-datepicker.css";
-
 import CustomFormField, { FormFieldType } from "../CustomFormField";
 import SubmitButton from "../SubmitButton";
 import { Form } from "../ui/form";
-
-// Type definition for the AppointmentFormProps
-type AppointmentFormProps = {
-  userId: string;
-  patientId: string;
-  type: "create" | "schedule" | "cancel";
-  appointment?: Appointment;
-  setOpen?: Dispatch<SetStateAction<boolean>>;
-};
+import { SelectItem } from "../ui/select";
 
 export const AppointmentForm = ({
   userId,
@@ -77,7 +52,6 @@ export const AppointmentForm = ({
     }
 
     try {
-      // Handle creating a new appointment
       if (type === "create" && patientId) {
         const appointment = {
           userId,
@@ -99,7 +73,6 @@ export const AppointmentForm = ({
           );
         }
       } else {
-        // Handle updating an existing appointment
         const appointmentToUpdate = {
           userId,
           appointmentId: appointment?.$id!,
@@ -126,7 +99,6 @@ export const AppointmentForm = ({
     setIsLoading(false);
   };
 
-  // Determine the button label based on the appointment type
   let buttonLabel;
   switch (type) {
     case "cancel":
@@ -196,7 +168,6 @@ export const AppointmentForm = ({
               <SelectItem value="Europe/London">Europe/London</SelectItem>
               <SelectItem value="Asia/Kolkata">Asia/Kolkata</SelectItem>
               <SelectItem value="Australia/Sydney">Australia/Sydney</SelectItem>
-              {/* Add more time zones as needed */}
             </CustomFormField>
 
             <div
