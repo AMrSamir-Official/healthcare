@@ -22,19 +22,22 @@ import CustomFormField, { FormFieldType } from "../CustomFormField";
 import SubmitButton from "../SubmitButton";
 import { Form } from "../ui/form";
 
+// نوع مخصص لجعل الكود أكثر وضوحًا ومرونة
+type AppointmentFormProps = {
+  userId: string;
+  patientId: string;
+  type: "create" | "schedule" | "cancel";
+  appointment?: Appointment;
+  setOpen?: Dispatch<SetStateAction<boolean>>;
+};
+
 export const AppointmentForm = ({
   userId,
   patientId,
   type = "create",
   appointment,
   setOpen,
-}: {
-  userId: string;
-  patientId: string;
-  type: "create" | "schedule" | "cancel";
-  appointment?: Appointment;
-  setOpen?: Dispatch<SetStateAction<boolean>>;
-}) => {
+}: AppointmentFormProps) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -101,7 +104,7 @@ export const AppointmentForm = ({
             schedule: new Date(values.schedule),
             status: status as Status,
             cancellationReason: values.cancellationReason,
-            timeZone, // Dynamic time zone added here
+            timeZone, // إضافة الوقت الزمني هنا
           },
           type,
         };
