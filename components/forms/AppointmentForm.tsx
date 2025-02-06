@@ -22,7 +22,7 @@ import CustomFormField, { FormFieldType } from "../CustomFormField";
 import SubmitButton from "../SubmitButton";
 import { Form } from "../ui/form";
 
-// نوع مخصص لجعل الكود أكثر وضوحًا ومرونة
+// Type definition for the AppointmentFormProps
 type AppointmentFormProps = {
   userId: string;
   patientId: string;
@@ -41,8 +41,10 @@ export const AppointmentForm = ({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
+  // Define the form validation schema based on the type
   const AppointmentFormValidation = getAppointmentSchema(type);
 
+  // Initialize the form using react-hook-form
   const form = useForm<z.infer<typeof AppointmentFormValidation>>({
     resolver: zodResolver(AppointmentFormValidation),
     defaultValues: {
@@ -74,6 +76,7 @@ export const AppointmentForm = ({
     }
 
     try {
+      // Handle creating a new appointment
       if (type === "create" && patientId) {
         const appointment = {
           userId,
@@ -94,7 +97,9 @@ export const AppointmentForm = ({
           );
         }
       } else {
-        const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        // Handle updating an existing appointment
+        const timeZone =
+          appointment?.timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone;
 
         const appointmentToUpdate = {
           userId,
@@ -104,7 +109,7 @@ export const AppointmentForm = ({
             schedule: new Date(values.schedule),
             status: status as Status,
             cancellationReason: values.cancellationReason,
-            timeZone, // إضافة الوقت الزمني هنا
+            timeZone, // Add timeZone here
           },
           type,
         };
@@ -122,6 +127,7 @@ export const AppointmentForm = ({
     setIsLoading(false);
   };
 
+  // Determine the button label based on the appointment type
   let buttonLabel;
   switch (type) {
     case "cancel":
