@@ -55,6 +55,7 @@ export const AppointmentForm = ({
       reason: appointment ? appointment.reason : "",
       note: appointment?.note || "",
       cancellationReason: appointment?.cancellationReason || "",
+      timeZone: appointment?.timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone, // Default to the user's time zone
     },
   });
 
@@ -86,6 +87,7 @@ export const AppointmentForm = ({
           reason: values.reason!,
           status: status as Status,
           note: values.note,
+          timeZone: values.timeZone, // Include timeZone here
         };
 
         const newAppointment = await createAppointment(appointment);
@@ -98,9 +100,6 @@ export const AppointmentForm = ({
         }
       } else {
         // Handle updating an existing appointment
-        const timeZone =
-          appointment?.timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone;
-
         const appointmentToUpdate = {
           userId,
           appointmentId: appointment?.$id!,
@@ -109,7 +108,7 @@ export const AppointmentForm = ({
             schedule: new Date(values.schedule),
             status: status as Status,
             cancellationReason: values.cancellationReason,
-            timeZone, // Add timeZone here
+            timeZone: values.timeZone, // Include timeZone here
           },
           type,
         };
@@ -181,10 +180,24 @@ export const AppointmentForm = ({
               fieldType={FormFieldType.DATE_PICKER}
               control={form.control}
               name="schedule"
-              label="Expected appointment date"
+              label="Appointment date and time"
               showTimeSelect
               dateFormat="MM/dd/yyyy  -  h:mm aa"
             />
+
+            <CustomFormField
+              fieldType={FormFieldType.SELECT}
+              control={form.control}
+              name="timeZone"
+              label="Time Zone"
+              placeholder="Select a time zone"
+            >
+              <SelectItem value="America/New_York">America/New_York</SelectItem>
+              <SelectItem value="Europe/London">Europe/London</SelectItem>
+              <SelectItem value="Asia/Kolkata">Asia/Kolkata</SelectItem>
+              <SelectItem value="Australia/Sydney">Australia/Sydney</SelectItem>
+              {/* Add more time zones as needed */}
+            </CustomFormField>
 
             <div
               className={`flex flex-col gap-6  ${type === "create" && "xl:flex-row"}`}
